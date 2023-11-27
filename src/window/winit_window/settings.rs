@@ -56,10 +56,40 @@ impl Default for SurfaceSettings {
     }
 }
 
+/// Wrapper struct for an icon and its path.
+#[derive(Debug, Clone)]
+pub struct WindowIcon {
+    /// Icon
+    pub icon: Icon,
+    /// Path to the icon
+    path: String,
+}
+
+impl WindowIcon {
+    /// Creates a new window icon from the given icon and path.
+    pub fn new(icon: Icon, path: String) -> Self {
+        Self { icon, path }
+    }
+}
+
+impl From<(Icon, String)> for WindowIcon {
+    fn from((icon, path): (Icon, String)) -> Self {
+        Self { icon, path }
+    }
+}
+
+impl PartialEq for WindowIcon {
+    fn eq(&self, other: &Self) -> bool {
+        self.path.eq(other.path.as_str())
+    }
+}
+
+impl Eq for WindowIcon {}
+
 ///
 /// Settings for the default [Window](super::Window).
 ///
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WindowSettings {
     /// The title of the window.
     ///
@@ -82,7 +112,7 @@ pub struct WindowSettings {
     pub borderless: bool,
 
     /// An optional icon for the window.
-    pub icon: Option<Icon>,
+    pub icon: Option<WindowIcon>,
     /// An optional [canvas element][web_sys::HtmlCanvasElement] for using as winit window.
     /// If this is `None`, the DOM (`index.html`) must contain a canvas element
     #[cfg(target_arch = "wasm32")]

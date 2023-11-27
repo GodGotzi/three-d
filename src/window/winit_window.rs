@@ -103,7 +103,7 @@ impl Window {
                     window_settings.min_size.0,
                     window_settings.min_size.1,
                 ))
-                .with_window_icon(window_settings.icon)
+                .with_window_icon(window_settings.icon.map(|icon| icon.icon))
                 .with_decorations(!window_settings.borderless);
 
             if let Some((width, height)) = window_settings.max_size {
@@ -154,7 +154,7 @@ impl Window {
                 .with_title(window_settings.title)
                 .with_canvas(Some(canvas))
                 .with_inner_size(inner_size)
-                .with_window_icon(window_settings.icon)
+                .with_window_icon(window_settings.icon.map(|icon| icon.icon))
                 .with_prevent_default(true)
         };
 
