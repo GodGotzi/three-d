@@ -1,3 +1,5 @@
+use winit::window::Icon;
+
 /// Selects the level of hardware graphics acceleration.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum HardwareAcceleration {
@@ -57,7 +59,7 @@ impl Default for SurfaceSettings {
 ///
 /// Settings for the default [Window](super::Window).
 ///
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct WindowSettings {
     /// The title of the window.
     ///
@@ -78,6 +80,9 @@ pub struct WindowSettings {
     ///
     /// On web this has no effect.
     pub borderless: bool,
+
+    /// An optional icon for the window.
+    pub icon: Option<Icon>,
     /// An optional [canvas element][web_sys::HtmlCanvasElement] for using as winit window.
     /// If this is `None`, the DOM (`index.html`) must contain a canvas element
     #[cfg(target_arch = "wasm32")]
@@ -93,6 +98,7 @@ impl Default for WindowSettings {
             min_size: (2, 2),
             max_size: None,
             borderless: false,
+            icon: None,
             #[cfg(target_arch = "wasm32")]
             canvas: None,
             surface_settings: SurfaceSettings::default(),
