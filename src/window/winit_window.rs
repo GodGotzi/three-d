@@ -2,7 +2,7 @@
 use crate::core::{Context, CoreError, Viewport};
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
-use winit::window::WindowBuilder;
+use winit::window::{Icon, WindowBuilder};
 use winit::*;
 
 mod settings;
@@ -86,13 +86,23 @@ impl Window {
     ///
     /// [settings]: WindowSettings
     pub fn new(window_settings: WindowSettings) -> Result<Self, WindowError> {
-        Self::from_event_loop(window_settings, EventLoop::new())
+        Self::from_event_loop(window_settings, None, EventLoop::new())
+    }
+
+    ///
+    /// Constructs a new Window with the given [settings].
+    ///
+    ///
+    /// [settings]: WindowSettings
+    pub fn with_icon(window_settings: WindowSettings, icon: Icon) -> Result<Self, WindowError> {
+        Self::from_event_loop(window_settings, Some(icon), EventLoop::new())
     }
 
     /// Exactly the same as [`Window::new()`] except with the ability to supply
     /// an existing [`EventLoop`].
     pub fn from_event_loop(
         window_settings: WindowSettings,
+        window_icon: Option<Icon>,
         event_loop: EventLoop<()>,
     ) -> Result<Self, WindowError> {
         #[cfg(not(target_arch = "wasm32"))]
@@ -103,6 +113,7 @@ impl Window {
                     window_settings.min_size.0,
                     window_settings.min_size.1,
                 ))
+                .with_window_icon(window_icon)
                 .with_decorations(!window_settings.borderless);
 
             if let Some((width, height)) = window_settings.max_size {
@@ -153,6 +164,7 @@ impl Window {
                 .with_title(window_settings.title)
                 .with_canvas(Some(canvas))
                 .with_inner_size(inner_size)
+                .with_window_icon(window_icon)
                 .with_prevent_default(true)
         };
 
